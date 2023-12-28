@@ -2,6 +2,8 @@ import { useState } from "react";
 import * as XLSX from "xlsx";
 
 const Excel = () => {
+  const [editable, setEditable] = useState(false);
+
   // onchange states
   const [excelFile, setExcelFile] = useState(null);
   const [typeError, setTypeError] = useState<string | null>(null);
@@ -34,6 +36,18 @@ const Excel = () => {
     }
   };
 
+  const handleChange = (e: any, index: number) => {
+    const { name, value } = e.target;
+    const updatedData = excelData.map((entry: any, i: number) => {
+      console.log(index, i);
+      if (index === i) {
+        return { ...entry, [name]: value };
+      }
+      return entry;
+    });
+    setExcelData(updatedData);
+  };
+
   // submit event
   const handleFileSubmit = (e: any) => {
     e.preventDefault();
@@ -56,7 +70,12 @@ const Excel = () => {
       >
         Cargar información
       </button>
-      <button className="btn btn-outline-secondary mx-2">Editar datos</button>
+      <button
+        className="btn btn-outline-secondary mx-2"
+        onClick={() => setEditable(!editable)}
+      >
+        {editable ? "Guardar" : "Editar"}
+      </button>
 
       {/* Load information modal */}
       <div
@@ -142,6 +161,7 @@ const Excel = () => {
               <thead>
                 <tr>
                   <th scope="col">#</th>
+                  {/* generate the keys of the table */}
                   {Object.keys(excelData[0]).map((col: string, i: number) => {
                     return (
                       <th
@@ -155,33 +175,22 @@ const Excel = () => {
                 </tr>
               </thead>
               <tbody>
-                {excelData.map((entry: any, i: number) => {
-                  return (
-                    <tr key={i}>
-                      <th scope="row">{i+1}</th>
-                      {Object.values(entry).map((row: any, i: number) => {
-                        return <td key={i}>{row}</td>;
-                      })}
-                    </tr>
-                  );
-                })}
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                  <td>@fat</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td colSpan={2}>Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
+                {/* generate the entries for the table */}
+                {excelData.map((row: any, index: number) => (
+                  <tr key={index}>
+                    {Object.keys(row).map((key) => (
+                      <td key={key}>
+                        <input
+                          name={key}
+                          value={row[key]}
+                          onChange={(e) => handleChange(e, index)}
+                          style={{ border: "none", outline: "none"}}
+                          readOnly={!editable}
+                        />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
