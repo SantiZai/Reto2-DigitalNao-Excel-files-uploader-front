@@ -11,7 +11,7 @@ const Excel = () => {
   // submit states
   const [excelData, setExcelData] = useState<any>(null);
 
-  // onchange event
+  // onchange file event
   const handleFile = (e: any) => {
     const fileTypes = [
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -36,6 +36,7 @@ const Excel = () => {
     }
   };
 
+  // onchange input event
   const handleChange = (e: any, index: number) => {
     const { name, value } = e.target;
     const updatedData = excelData.map((entry: any, i: number) => {
@@ -61,21 +62,23 @@ const Excel = () => {
   };
 
   return (
-    <>
-      <button
-        className="btn btn-outline-primary mx-2"
-        type="button"
-        data-bs-toggle="modal"
-        data-bs-target="#loadInfoModalContainer"
-      >
-        Cargar información
-      </button>
-      <button
-        className="btn btn-outline-secondary mx-2"
-        onClick={() => setEditable(!editable)}
-      >
-        {editable ? "Guardar" : "Editar"}
-      </button>
+    <div className="mt-2">
+      <div className="mb-2">
+        <button
+          className="btn btn-outline-primary mx-2"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#loadInfoModalContainer"
+        >
+          Cargar información
+        </button>
+        <button
+          className="btn btn-outline-secondary mx-2"
+          onClick={() => setEditable(!editable)}
+        >
+          {editable ? "Guardar" : "Editar"}
+        </button>
+      </div>
 
       {/* Load information modal */}
       <div
@@ -154,51 +157,58 @@ const Excel = () => {
       </div>
 
       {/* render the data */}
-      <div>
-        {excelData ? (
-          <div>
-            <table className="table">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  {/* generate the keys of the table */}
-                  {Object.keys(excelData[0]).map((col: string, i: number) => {
-                    return (
-                      <th
-                        scope="col"
-                        key={i}
-                      >
-                        {col}
-                      </th>
-                    );
-                  })}
+      {excelData ? (
+        <div className="table-responsive">
+          <table className="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                {/* generate the keys of the table */}
+                {Object.keys(excelData[0]).map((col: string, i: number) => {
+                  return (
+                    <th
+                      scope="col"
+                      key={i}
+                    >
+                      {col}
+                    </th>
+                  );
+                })}
+              </tr>
+            </thead>
+            <tbody>
+              {/* generate the entries for the table */}
+              {excelData.map((row: any, index: number) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  {Object.keys(row).map((key) => (
+                    <td key={key}>
+                      <input
+                        name={key}
+                        value={
+                          typeof row[key] === "string"
+                            ? row[key].trim()
+                            : row[key]
+                        }
+                        onChange={(e) => handleChange(e, index)}
+                        style={
+                          editable
+                            ? { border: "1px solid black" }
+                            : { border: "none", outline: "none" }
+                        }
+                        readOnly={!editable}
+                      />
+                    </td>
+                  ))}
                 </tr>
-              </thead>
-              <tbody>
-                {/* generate the entries for the table */}
-                {excelData.map((row: any, index: number) => (
-                  <tr key={index}>
-                    {Object.keys(row).map((key) => (
-                      <td key={key}>
-                        <input
-                          name={key}
-                          value={row[key]}
-                          onChange={(e) => handleChange(e, index)}
-                          style={{ border: "none", outline: "none"}}
-                          readOnly={!editable}
-                        />
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div>Selecciona un archivo</div>
-        )}
-      </div>
-    </>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div>Selecciona un archivo</div>
+      )}
+    </div>
   );
 };
 
