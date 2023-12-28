@@ -135,7 +135,60 @@ const Excel = () => {
       </div>
 
       {/* render the data */}
-      <div>{excelData ? <div></div> : <div>Selecciona un archivo</div>}</div>
+      <div>
+        {excelData ? (
+          <div>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  {Object.keys(excelData[0]).map((col: string, i: number) => {
+                    return (
+                      <th
+                        scope="col"
+                        key={i}
+                      >
+                        {col}
+                      </th>
+                    );
+                  })}
+                </tr>
+              </thead>
+              <tbody>
+                {excelData.map((entry: any, i: number) => {
+                  return (
+                    <tr key={i}>
+                      <th scope="row">{i+1}</th>
+                      {Object.values(entry).map((row: any, i: number) => {
+                        return <td key={i}>{row}</td>;
+                      })}
+                    </tr>
+                  );
+                })}
+                <tr>
+                  <th scope="row">1</th>
+                  <td>Mark</td>
+                  <td>Otto</td>
+                  <td>@mdo</td>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>Jacob</td>
+                  <td>Thornton</td>
+                  <td>@fat</td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td colSpan={2}>Larry the Bird</td>
+                  <td>@twitter</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div>Selecciona un archivo</div>
+        )}
+      </div>
     </>
   );
 };

@@ -1,4 +1,4 @@
-import Logo from "logo-nlmx.png";
+import Logo from "../assets/logo-nlmx.png";
 
 const Navbar = () => {
   const verifyUser = (username: string, password: string) => {};
@@ -121,7 +121,7 @@ const Navbar = () => {
             </div>
           </div>
         </div>
-      </div>      
+      </div>
     </>
   );
 };
