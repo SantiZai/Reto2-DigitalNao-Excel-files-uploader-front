@@ -1,7 +1,30 @@
+import { useState } from "react";
 import Logo from "../assets/logo-nlmx.png";
 
-const Navbar = () => {
-  const verifyUser = (username: string, password: string) => {};
+interface Props {
+  login: (username: string, password: string) => void;
+  loggedIn: boolean;
+}
+
+const Navbar = (props: Props) => {
+  const [credentials, setCredentials] = useState({
+    username: "",
+    password: "",
+  } as { username: string; password: string });
+
+  const handleLogin = (credentials: { username: string; password: string }) => {
+    const { username, password } = credentials;
+    props.login(username, password);
+  };
+
+  // onchange login inputs event
+  const handleInputs = (e: any) => {
+    const updatedCredentials = {
+      ...credentials,
+      [e.target.name]: e.target.value,
+    };
+    setCredentials(updatedCredentials);
+  };
 
   return (
     <>
@@ -45,14 +68,20 @@ const Navbar = () => {
                 </a>
               </li>
             </ul>
-            <button
-              className="btn btn-outline-success mx-2"
-              type="button"
-              data-bs-toggle="modal"
-              data-bs-target="#loginModalContainer"
-            >
-              Iniciar sesión
-            </button>
+            {props.loggedIn ? (
+              <div>
+                <h5>Hola {credentials.username}!</h5>
+              </div>
+            ) : (
+              <button
+                className="btn btn-outline-success mx-2"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#loginModalContainer"
+              >
+                Iniciar sesión
+              </button>
+            )}
           </div>
         </div>
       </nav>
@@ -91,6 +120,9 @@ const Navbar = () => {
                   className="form-control"
                   id="floatingInput"
                   placeholder="Username"
+                  name="username"
+                  value={credentials.username}
+                  onChange={(e) => handleInputs(e)}
                 />
                 <label htmlFor="floatingInput">Username</label>
               </div>
@@ -100,6 +132,9 @@ const Navbar = () => {
                   className="form-control"
                   id="floatingPassword"
                   placeholder="Password"
+                  name="password"
+                  value={credentials.password}
+                  onChange={(e) => handleInputs(e)}
                 />
                 <label htmlFor="floatingPassword">Password</label>
               </div>
@@ -109,12 +144,15 @@ const Navbar = () => {
                 type="button"
                 className="btn btn-secondary"
                 data-bs-dismiss="modal"
+                onClick={() => setCredentials({ username: "", password: "" })}
               >
                 Cancelar
               </button>
               <button
                 type="button"
                 className="btn btn-primary"
+                data-bs-dismiss="modal"
+                onClick={() => handleLogin(credentials)}
               >
                 Iniciar sesión
               </button>
