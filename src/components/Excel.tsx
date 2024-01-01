@@ -1,7 +1,7 @@
 import { useState } from "react";
 import * as XLSX from "xlsx";
 
-const Excel = () => {
+const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [editable, setEditable] = useState(false);
 
   // onchange states
@@ -53,34 +53,47 @@ const Excel = () => {
   const handleFileSubmit = (e: any) => {
     e.preventDefault();
     if (excelFile !== null) {
+      // read the excel file
       const workbook = XLSX.read(excelFile, { type: "buffer" });
+
+      // use the first sheet of the workbook
       const worksheetName = workbook.SheetNames[0];
+
+      // find the sheet with the name previously selected
       const worksheet = workbook.Sheets[worksheetName];
+
+      // transform the table to json
       const data = XLSX.utils.sheet_to_json(worksheet);
+
+      // load the 10 first entries of the sheet
       setExcelData(data.slice(0, 10));
     }
   };
 
   return (
-    <div className="mt-2">
-      <div className="mb-2">
-        <button
-          className="btn btn-outline-primary mx-2"
-          type="button"
-          data-bs-toggle="modal"
-          data-bs-target="#loadInfoModalContainer"
-        >
-          Cargar información
-        </button>
-        <button
-          className="btn btn-outline-secondary mx-2"
-          onClick={() => setEditable(!editable)}
-        >
-          {editable ? "Guardar" : "Editar"}
-        </button>
-      </div>
+    <div className="container text-center mt-2">
+      {isLoggedIn ? (
+        <div className="mb-2">
+          <button
+            className="btn btn-outline-primary mx-2"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#loadInfoModalContainer"
+          >
+            Cargar información
+          </button>
+          <button
+            className="btn btn-outline-secondary mx-2"
+            onClick={() => setEditable(!editable)}
+          >
+            {editable ? "Guardar" : "Editar"}
+          </button>
+        </div>
+      ) : (
+        <h2>Se necesita iniciar sesión</h2>
+      )}
 
-      {/* Load information modal */}
+      {/* load information modal */}
       <div
         className="modal fade"
         id="loadInfoModalContainer"
@@ -122,7 +135,7 @@ const Excel = () => {
                 />
                 <button
                   type="submit"
-                  className="btn btn-success btn-md"
+                  className="btn btn-success btn-md mt-2"
                   data-bs-dismiss="modal"
                 >
                   Subir
@@ -206,7 +219,7 @@ const Excel = () => {
           </table>
         </div>
       ) : (
-        <div>Selecciona un archivo</div>
+        isLoggedIn && <span>Selecciona un archivo</span>
       )}
     </div>
   );

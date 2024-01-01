@@ -5,7 +5,7 @@ import Navbar from "./components/Navbar";
 function App() {
   const ADMIN = { username: "Santi", password: "San" };
 
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState(
     {} as { username: string; password: string }
   );
@@ -19,8 +19,11 @@ function App() {
 
   return (
     <div className="container-fluid">
-      <Navbar login={login} loggedIn={loggedIn} />
-      <Excel />
+      <Navbar
+        login={login}
+        loggedIn={loggedIn}
+      />
+      <Excel isLoggedIn={loggedIn} />
     </div>
   );
 }
