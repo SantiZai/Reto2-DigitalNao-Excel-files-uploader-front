@@ -62,8 +62,14 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       // find the sheet with the name previously selected
       const worksheet = workbook.Sheets[worksheetName];
 
-      // transform the table to json
-      const data = XLSX.utils.sheet_to_json(worksheet);
+      console.log(worksheet.D3.w);
+
+      /**
+       * transform the table to json
+       * dont parse the numbers, rawNumbers: false obtain the field in string format
+       */
+      const data = XLSX.utils.sheet_to_json(worksheet, { rawNumbers: false });
+      console.log(XLSX.utils.sheet_to_json(worksheet, { rawNumbers: false }));
 
       // load the 10 first entries of the sheet
       setExcelData(data.slice(0, 10));
