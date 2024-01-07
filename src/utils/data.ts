@@ -1,3 +1,4 @@
+// TODO: manage the errors with try catch
 export const getData = async () => {
   const response = await fetch("http://localhost:3000/data", {
     method: "GET",
@@ -6,5 +7,20 @@ export const getData = async () => {
     },
   });
   const data = await response.json();
-  console.log(data);
+  return data;
+};
+
+export const postData = async (data: any) => {
+  const response = await fetch("http://localhost:3000/data", {
+    method: "POST",
+    body: data,
+  });
+  console.log(response, response.status);
+};
+
+export const deleteData = async () => {
+  const response = await fetch("http://localhost:3000/data", {
+    method: "DELETE",
+  });
+  console.log(response, response.status);
 };

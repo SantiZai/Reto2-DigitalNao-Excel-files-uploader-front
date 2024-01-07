@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
-import { getData } from "../utils/data";
+import { getData, postData } from "../utils/data";
 
 const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [editable, setEditable] = useState(false);
@@ -9,8 +9,9 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [excelFile, setExcelFile] = useState(null);
   const [typeError, setTypeError] = useState<string | null>(null);
 
-  // submit states
+  // data states
   const [excelData, setExcelData] = useState<any>(null);
+  const [dataMaxRows, setDataMaxRows] = useState<any>(null);
 
   // onchange file event
   const handleFile = (e: any) => {
@@ -63,19 +64,30 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       // find the sheet with the name previously selected
       const worksheet = workbook.Sheets[worksheetName];
 
-      console.log(worksheet.D3.w);
-
       /**
        * transform the table to json
        * dont parse the numbers, rawNumbers: false obtain the field in string format
        */
       const data = XLSX.utils.sheet_to_json(worksheet, { rawNumbers: false });
-      console.log(XLSX.utils.sheet_to_json(worksheet, { rawNumbers: false }));
+
+      // set the data into the state
+      setExcelData(data);
 
       // load the 10 first entries of the sheet
-      setExcelData(data.slice(0, 10));
+      setDataMaxRows(data.slice(0, 10));
     }
   };
+
+  useEffect(() => {
+    return () => {
+      getData().then((res) => {
+        if (res.length > 0) {
+          setExcelData(res);
+          setDataMaxRows(res.slice(0, 10));
+        }
+      });
+    };
+  }, []);
 
   return (
     <div className="container text-center mt-2">
@@ -183,14 +195,14 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       </div>
 
       {/* render the data */}
-      {excelData ? (
+      {dataMaxRows ? (
         <div className="table-responsive">
           <table className="table table-hover">
             <thead>
               <tr>
                 <th scope="col">#</th>
                 {/* generate the keys of the table */}
-                {Object.keys(excelData[0]).map((col: string, i: number) => {
+                {Object.keys(dataMaxRows[0]).map((col: string, i: number) => {
                   return (
                     <th
                       scope="col"
@@ -204,7 +216,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
             </thead>
             <tbody>
               {/* generate the entries for the table */}
-              {excelData.map((row: any, index: number) => (
+              {dataMaxRows.map((row: any, index: number) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
                   {Object.keys(row).map((key) => (
