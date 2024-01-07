@@ -11,7 +11,6 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
 
   // data states
   const [excelData, setExcelData] = useState<any>(null);
-  const [dataMaxRows, setDataMaxRows] = useState<any>(null);
 
   // onchange file event
   const handleFile = (e: any) => {
@@ -52,7 +51,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   };
 
   // submit event
-  const handleFileSubmit = (e: any) => {
+  const handleFileSubmit = async (e: any) => {
     e.preventDefault();
     if (excelFile !== null) {
       // read the excel file
@@ -73,18 +72,15 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       // set the data into the state
       setExcelData(data);
 
-      // load the 10 first entries of the sheet
-      setDataMaxRows(data.slice(0, 10));
+      // save the file into the db
+      await postData(excelData).then((res) => console.log(res));
     }
   };
 
   useEffect(() => {
     return () => {
       getData().then((res) => {
-        if (res.length > 0) {
-          setExcelData(res);
-          setDataMaxRows(res.slice(0, 10));
-        }
+        if (res.length > 0) setExcelData(res);
       });
     };
   }, []);
@@ -195,14 +191,14 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       </div>
 
       {/* render the data */}
-      {dataMaxRows ? (
+      {excelData ? (
         <div className="table-responsive">
           <table className="table table-hover">
             <thead>
               <tr>
                 <th scope="col">#</th>
                 {/* generate the keys of the table */}
-                {Object.keys(dataMaxRows[0]).map((col: string, i: number) => {
+                {Object.keys(excelData[0]).map((col: string, i: number) => {
                   return (
                     <th
                       scope="col"
@@ -216,7 +212,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
             </thead>
             <tbody>
               {/* generate the entries for the table */}
-              {dataMaxRows.map((row: any, index: number) => (
+              {excelData.map((row: any, index: number) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
                   {Object.keys(row).map((key) => (

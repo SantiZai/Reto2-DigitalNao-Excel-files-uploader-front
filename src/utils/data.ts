@@ -1,6 +1,6 @@
 // TODO: manage the errors with try catch
 export const getData = async () => {
-  const response = await fetch("http://localhost:3000/data", {
+  const response = await fetch("http://localhost:4000/data", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -11,7 +11,7 @@ export const getData = async () => {
 };
 
 export const postData = async (data: any) => {
-  const response = await fetch("http://localhost:3000/data", {
+  const response = await fetch("http://localhost:4000/data", {
     method: "POST",
     body: data,
   });
@@ -19,7 +19,7 @@ export const postData = async (data: any) => {
 };
 
 export const deleteData = async () => {
-  const response = await fetch("http://localhost:3000/data", {
+  const response = await fetch("http://localhost:4000/data", {
     method: "DELETE",
   });
   console.log(response, response.status);
