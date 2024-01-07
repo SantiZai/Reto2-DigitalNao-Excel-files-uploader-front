@@ -1,5 +1,6 @@
 import { useState } from "react";
 import * as XLSX from "xlsx";
+import { getData } from "../utils/data";
 
 const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [editable, setEditable] = useState(false);
@@ -98,6 +99,12 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       ) : (
         <h2>Se necesita iniciar sesión</h2>
       )}
+      <button
+        onClick={getData}
+        className="btn"
+      >
+        traer bd
+      </button>
 
       {/* load information modal */}
       <div
