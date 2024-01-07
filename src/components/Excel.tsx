@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
-import { getData, postData } from "../utils/data";
+import { deleteData, getData, postData } from "../utils/data";
 
 const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [editable, setEditable] = useState(false);
@@ -41,13 +41,13 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const handleChange = (e: any, index: number) => {
     const { name, value } = e.target;
     const updatedData = excelData.map((entry: any, i: number) => {
-      console.log(index, i);
       if (index === i) {
         return { ...entry, [name]: value };
       }
       return entry;
     });
     setExcelData(updatedData);
+    console.log(updatedData);
   };
 
   // submit event
@@ -72,8 +72,10 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       // set the data into the state
       setExcelData(data);
 
-      // save the file into the db
-      await postData(excelData).then((res) => console.log(res));
+      // delete the previous file and save new file into the db
+      deleteData();
+      postData(data);
+      console.log(data);
     }
   };
 
