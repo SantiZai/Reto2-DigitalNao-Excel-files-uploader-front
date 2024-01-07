@@ -12,18 +12,6 @@ export const getData = async () => {
   return data;
 };
 
-/* export const postData = async (data: any) => {
-  try {
-    const response = await fetch(`http://localhost:${PORT}/data`, {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
-    console.log(response, response.status);
-  } catch (err) {
-    console.error(err);
-  }
-}; */
-
 export const postData = async (data: any) => {
   try {
     const response = await fetch(`http://localhost:${PORT}/data`, {
@@ -35,7 +23,7 @@ export const postData = async (data: any) => {
     });
 
     if (!response.ok) {
-        console.log(response.status, response.text)
+      console.log(response.status, response.text);
       throw new Error("Request failed!");
     }
 

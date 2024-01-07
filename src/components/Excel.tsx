@@ -75,7 +75,6 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       // delete the previous file and save new file into the db
       deleteData();
       postData(data);
-      console.log(data);
     }
   };
 
