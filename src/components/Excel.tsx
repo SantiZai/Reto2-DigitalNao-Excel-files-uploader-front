@@ -108,12 +108,6 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       ) : (
         <h2>Se necesita iniciar sesión</h2>
       )}
-      <button
-        onClick={getData}
-        className="btn"
-      >
-        traer bd
-      </button>
 
       {/* load information modal */}
       <div

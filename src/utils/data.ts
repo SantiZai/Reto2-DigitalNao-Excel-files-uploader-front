@@ -13,24 +13,28 @@ export const getData = async () => {
 };
 
 export const postData = async (data: any) => {
-  try {
-    const response = await fetch(`http://localhost:${PORT}/data`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data.slice(0, 10)),
-    });
+  const batchSize = 50;
+  for (let i = 0; i < data.length; i += batchSize) {
+    const batch = data.slice(i, i + batchSize);
+    try {
+      const response = await fetch(`http://localhost:${PORT}/data`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(batch),
+      });
 
-    if (!response.ok) {
-      console.log(response.status, response.text);
-      throw new Error("Request failed!");
+      if (!response.ok) {
+        console.log(response.status, response.text);
+        throw new Error("Request failed!");
+      }
+
+      const json = await response.json();
+      console.log(json);
+    } catch (error) {
+      console.error(error);
     }
-
-    const json = await response.json();
-    console.log(json);
-  } catch (error) {
-    console.error(error);
   }
 };
 
