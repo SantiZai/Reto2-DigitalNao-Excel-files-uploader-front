@@ -1,8 +1,8 @@
 const PORT = 4200;
 
 // TODO: manage the errors with try catch
-export const getData = async () => {
-  const response = await fetch(`http://localhost:${PORT}/data`, {
+export const getData = async (page: string = "1") => {
+  const response = await fetch(`http://localhost:${PORT}/data?page=${page}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -13,7 +13,9 @@ export const getData = async () => {
 };
 
 export const postData = async (data: any) => {
+  // set a max number of data for each petition to dont charge the payload
   const batchSize = 50;
+  // create various petitions to the api
   for (let i = 0; i < data.length; i += batchSize) {
     const batch = data.slice(i, i + batchSize);
     try {

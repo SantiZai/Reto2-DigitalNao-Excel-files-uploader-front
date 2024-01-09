@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
-import { deleteData, getData, postData } from "../utils/data";
+import { deleteData, getData, postData } from "../utils/manageData";
 
 const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [editable, setEditable] = useState(false);
@@ -9,8 +9,11 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [excelFile, setExcelFile] = useState(null);
   const [typeError, setTypeError] = useState<string | null>(null);
 
-  // data states
+  // data state
   const [excelData, setExcelData] = useState<any>(null);
+
+  // pagination state
+  const [actualPage, setActualPage] = useState<string>("1");
 
   // onchange file event
   const handleFile = (e: any) => {
@@ -47,7 +50,6 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       return entry;
     });
     setExcelData(updatedData);
-    console.log(updatedData);
   };
 
   // submit event
@@ -79,12 +81,10 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   };
 
   useEffect(() => {
-    return () => {
-      getData().then((res) => {
-        if (res.length > 0) setExcelData(res);
-      });
-    };
-  }, []);
+    getData(actualPage).then((res) => {
+      if (res.length > 0) setExcelData(res);
+    });
+  }, [actualPage]);
 
   return (
     <div className="container text-center mt-2">
@@ -187,53 +187,61 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
 
       {/* render the data */}
       {excelData ? (
-        <div className="table-responsive">
-          <table className="table table-hover">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                {/* generate the keys of the table */}
-                {Object.keys(excelData[0]).map((col: string, i: number) => {
-                  return (
-                    <th
-                      scope="col"
-                      key={i}
-                    >
-                      {col}
-                    </th>
-                  );
-                })}
-              </tr>
-            </thead>
-            <tbody>
-              {/* generate the entries for the table */}
-              {excelData.map((row: any, index: number) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  {Object.keys(row).map((key) => (
-                    <td key={key}>
-                      <input
-                        name={key}
-                        value={
-                          typeof row[key] === "string"
-                            ? row[key].trim()
-                            : row[key]
-                        }
-                        onChange={(e) => handleChange(e, index)}
-                        style={
-                          editable
-                            ? { border: "1px solid black" }
-                            : { border: "none", outline: "none" }
-                        }
-                        readOnly={!editable}
-                      />
-                    </td>
-                  ))}
+        <>
+          <div className="table-responsive">
+            <table className="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  {/* generate the keys of the table */}
+                  {Object.keys(excelData[0]).map((col: string, i: number) => {
+                    return (
+                      <th
+                        scope="col"
+                        key={i}
+                      >
+                        {col}
+                      </th>
+                    );
+                  })}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {/* generate the entries for the table */}
+                {excelData.map((row: any, index: number) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    {Object.keys(row).map((key) => (
+                      <td key={key}>
+                        <input
+                          name={key}
+                          value={
+                            typeof row[key] === "string"
+                              ? row[key].trim()
+                              : row[key]
+                          }
+                          onChange={(e) => handleChange(e, index)}
+                          style={
+                            editable
+                              ? { border: "1px solid black" }
+                              : { border: "none", outline: "none" }
+                          }
+                          readOnly={!editable}
+                        />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div>
+            {/* TODO: generate a functional pagination */}
+            <span onClick={() => setActualPage("1")}>1</span>
+            <span onClick={() => setActualPage("2")}>2</span>
+            <span onClick={() => setActualPage("3")}>3</span>
+          </div>
+        </>
       ) : (
         isLoggedIn && <span>Selecciona un archivo</span>
       )}
