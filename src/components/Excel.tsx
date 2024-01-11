@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import { deleteData, getData, postData } from "../utils/manageData";
+import Pagination from "./Pagination";
 
 const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [editable, setEditable] = useState(false);
@@ -12,8 +13,9 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   // data state
   const [excelData, setExcelData] = useState<any>(null);
 
-  // pagination state
-  const [actualPage, setActualPage] = useState<string>("1");
+  // pagination states
+  const [actualPage, setActualPage] = useState<number>(1);
+  const [pagesCount, setPagesCount] = useState<number>(1);
 
   // onchange file event
   const handleFile = (e: any) => {
@@ -82,7 +84,10 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
 
   useEffect(() => {
     getData(actualPage).then((res) => {
-      if (res.batchedData.length > 0) setExcelData(res.batchedData);
+      if (res.batchedData.length > 0) {
+        setExcelData(res.batchedData);
+        setPagesCount(res.dataLength);
+      }
     });
   }, [actualPage]);
 
@@ -235,12 +240,16 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
               </tbody>
             </table>
           </div>
-          <div>
-            {/* TODO: generate a functional pagination */}
-            <span onClick={() => setActualPage("1")}>1</span>
-            <span onClick={() => setActualPage("2")}>2</span>
-            <span onClick={() => setActualPage("3")}>3</span>
-          </div>
+          <>
+            <button onClick={() => setActualPage(actualPage - 1)}>{"<"}</button>
+            <Pagination
+              pagesCount={pagesCount}
+              actualPage={actualPage}
+              quantityPages={5}
+              setActualPage={setActualPage}
+            />
+            <button onClick={() => setActualPage(actualPage + 1)}>{">"}</button>
+          </>
         </>
       ) : (
         isLoggedIn && <span>Selecciona un archivo</span>

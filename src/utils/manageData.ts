@@ -1,7 +1,7 @@
 const PORT = 4200;
 
 // TODO: manage the errors with try catch
-export const getData = async (page: string = "1") => {
+export const getData = async (page: number = 1) => {
   const response = await fetch(`http://localhost:${PORT}/data?page=${page}`, {
     method: "GET",
     headers: {
