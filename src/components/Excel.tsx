@@ -71,7 +71,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
        * transform the table to json
        * dont parse the numbers, rawNumbers: false obtain the field in string format
        */
-      const data = XLSX.utils.sheet_to_json(worksheet, { rawNumbers: false });
+      const data = XLSX.utils.sheet_to_json(worksheet, { rawNumbers: false, defval: "" });
 
       // set the data into the state
       setExcelData(data);
@@ -86,7 +86,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
     getData(actualPage).then((res) => {
       if (res.batchedData.length > 0) {
         setExcelData(res.batchedData);
-        setPagesCount(res.dataLength);
+        setPagesCount(Math.ceil(res.dataLength / 10));
       }
     });
   }, [actualPage]);
@@ -240,16 +240,26 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
               </tbody>
             </table>
           </div>
-          <>
-            <button onClick={() => setActualPage(actualPage - 1)}>{"<"}</button>
+          <div className="d-flex align-items-center justify-content-center gap-4 pt-4">
+            <button
+              className={`btn btn-outline-primary ${actualPage === 1 ? "disabled" : ""}`}
+              onClick={() => setActualPage(actualPage - 1)}
+            >
+              {"<"}
+            </button>
             <Pagination
               pagesCount={pagesCount}
               actualPage={actualPage}
               quantityPages={5}
               setActualPage={setActualPage}
             />
-            <button onClick={() => setActualPage(actualPage + 1)}>{">"}</button>
-          </>
+            <button
+              className={`btn btn-outline-primary ${actualPage === pagesCount ? "disabled" : ""}`}
+              onClick={() => setActualPage(actualPage + 1)}
+            >
+              {">"}
+            </button>
+          </div>
         </>
       ) : (
         isLoggedIn && <span>Selecciona un archivo</span>
