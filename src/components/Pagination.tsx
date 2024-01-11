@@ -1,14 +1,10 @@
-import { ReactHTMLElement, useState } from "react";
-
 const Pagination = ({
   pagesCount,
   actualPage,
-  quantityPages,
   setActualPage,
 }: {
   pagesCount: number;
   actualPage: number;
-  quantityPages: number;
   setActualPage: (page: number) => void;
 }) => {
   const handlePage = (page: number) => setActualPage(page);
@@ -17,7 +13,7 @@ const Pagination = ({
       {actualPage === 1 ? null : actualPage === 2 ? (
         <span
           onClick={(e: React.MouseEvent<HTMLSpanElement>) =>
-            setActualPage(Number(e.currentTarget.innerHTML))
+            handlePage(Number(e.currentTarget.innerHTML))
           }
         >
           {actualPage - 1}
@@ -26,14 +22,14 @@ const Pagination = ({
         <>
           <span
             onClick={(e: React.MouseEvent<HTMLSpanElement>) =>
-              setActualPage(Number(e.currentTarget.innerHTML))
+              handlePage(Number(e.currentTarget.innerHTML))
             }
           >
             {actualPage - 2}
           </span>
           <span
             onClick={(e: React.MouseEvent<HTMLSpanElement>) =>
-              setActualPage(Number(e.currentTarget.innerHTML))
+              handlePage(Number(e.currentTarget.innerHTML))
             }
           >
             {actualPage - 1}
@@ -44,7 +40,7 @@ const Pagination = ({
       {actualPage === pagesCount ? null : actualPage === pagesCount - 1 ? (
         <span
           onClick={(e: React.MouseEvent<HTMLSpanElement>) =>
-            setActualPage(Number(e.currentTarget.innerHTML))
+            handlePage(Number(e.currentTarget.innerHTML))
           }
         >
           {actualPage + 1}
@@ -53,14 +49,14 @@ const Pagination = ({
         <>
           <span
             onClick={(e: React.MouseEvent<HTMLSpanElement>) =>
-              setActualPage(Number(e.currentTarget.innerHTML))
+              handlePage(Number(e.currentTarget.innerHTML))
             }
           >
             {actualPage + 1}
           </span>
           <span
             onClick={(e: React.MouseEvent<HTMLSpanElement>) =>
-              setActualPage(Number(e.currentTarget.innerHTML))
+              handlePage(Number(e.currentTarget.innerHTML))
             }
           >
             {actualPage + 2}

@@ -71,7 +71,10 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
        * transform the table to json
        * dont parse the numbers, rawNumbers: false obtain the field in string format
        */
-      const data = XLSX.utils.sheet_to_json(worksheet, { rawNumbers: false, defval: "" });
+      const data = XLSX.utils.sheet_to_json(worksheet, {
+        rawNumbers: false,
+        defval: "",
+      });
 
       // set the data into the state
       setExcelData(data);
@@ -242,7 +245,9 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
           </div>
           <div className="d-flex align-items-center justify-content-center gap-4 pt-4">
             <button
-              className={`btn btn-outline-primary ${actualPage === 1 ? "disabled" : ""}`}
+              className={`btn btn-outline-primary ${
+                actualPage === 1 ? "disabled" : ""
+              }`}
               onClick={() => setActualPage(actualPage - 1)}
             >
               {"<"}
@@ -250,11 +255,12 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
             <Pagination
               pagesCount={pagesCount}
               actualPage={actualPage}
-              quantityPages={5}
               setActualPage={setActualPage}
             />
             <button
-              className={`btn btn-outline-primary ${actualPage === pagesCount ? "disabled" : ""}`}
+              className={`btn btn-outline-primary ${
+                actualPage === pagesCount ? "disabled" : ""
+              }`}
               onClick={() => setActualPage(actualPage + 1)}
             >
               {">"}
