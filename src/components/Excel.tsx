@@ -194,7 +194,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       </div>
 
       {/* render the data */}
-      {excelData ? (
+      {isLoggedIn ?? excelData ? (
         <>
           <div className="table-responsive">
             <table className="table table-hover">
