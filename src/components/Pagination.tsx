@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ReactHTMLElement, useState } from "react";
 
 const Pagination = ({
   pagesCount,
@@ -14,7 +14,59 @@ const Pagination = ({
   const handlePage = (page: number) => setActualPage(page);
   return (
     <div>
+      {actualPage === 1 ? null : actualPage === 2 ? (
+        <span
+          onClick={(e: React.MouseEvent<HTMLSpanElement>) =>
+            setActualPage(Number(e.currentTarget.innerHTML))
+          }
+        >
+          {actualPage - 1}
+        </span>
+      ) : (
+        <>
+          <span
+            onClick={(e: React.MouseEvent<HTMLSpanElement>) =>
+              setActualPage(Number(e.currentTarget.innerHTML))
+            }
+          >
+            {actualPage - 2}
+          </span>
+          <span
+            onClick={(e: React.MouseEvent<HTMLSpanElement>) =>
+              setActualPage(Number(e.currentTarget.innerHTML))
+            }
+          >
+            {actualPage - 1}
+          </span>
+        </>
+      )}
       <span>{actualPage}</span>
+      {actualPage === pagesCount ? null : actualPage === pagesCount - 1 ? (
+        <span
+          onClick={(e: React.MouseEvent<HTMLSpanElement>) =>
+            setActualPage(Number(e.currentTarget.innerHTML))
+          }
+        >
+          {actualPage + 1}
+        </span>
+      ) : (
+        <>
+          <span
+            onClick={(e: React.MouseEvent<HTMLSpanElement>) =>
+              setActualPage(Number(e.currentTarget.innerHTML))
+            }
+          >
+            {actualPage + 1}
+          </span>
+          <span
+            onClick={(e: React.MouseEvent<HTMLSpanElement>) =>
+              setActualPage(Number(e.currentTarget.innerHTML))
+            }
+          >
+            {actualPage + 2}
+          </span>
+        </>
+      )}
     </div>
   );
 };
