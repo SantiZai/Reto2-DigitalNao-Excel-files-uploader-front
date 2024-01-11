@@ -82,7 +82,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
 
   useEffect(() => {
     getData(actualPage).then((res) => {
-      if (res.length > 0) setExcelData(res);
+      if (res.batchedData.length > 0) setExcelData(res.batchedData);
     });
   }, [actualPage]);
 
