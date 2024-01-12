@@ -1,15 +1,18 @@
 const PORT = 4200;
 
-// TODO: manage the errors with try catch
 export const getData = async (page: number = 1) => {
-  const response = await fetch(`http://localhost:${PORT}/data?page=${page}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const data = await response.json();
-  return data;
+  try {
+    const response = await fetch(`http://localhost:${PORT}/data?page=${page}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 export const postData = async (data: any) => {
@@ -34,15 +37,19 @@ export const postData = async (data: any) => {
 
       const json = await response.json();
       console.log(json);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
     }
   }
 };
 
 export const deleteData = async () => {
-  const response = await fetch(`http://localhost:${PORT}/data`, {
-    method: "DELETE",
-  });
-  console.log(response, response.status);
+  try {
+    const response = await fetch(`http://localhost:${PORT}/data`, {
+      method: "DELETE",
+    });
+    console.log(response, response.status);
+  } catch (err) {
+    console.error(err);
+  }
 };
