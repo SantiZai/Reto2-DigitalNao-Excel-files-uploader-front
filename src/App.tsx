@@ -1,20 +1,21 @@
 import { useState } from "react";
 import Excel from "./components/Excel";
 import Navbar from "./components/Navbar";
+import { signIn } from "./utils/login";
 
 function App() {
-  const ADMIN = { username: "Santi", password: "San" };
-
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState(
     {} as { username: string; password: string }
   );
 
-  const login = (username: string, password: string) => {
+  const login = async (username: string, password: string) => {
     setUser({ username, password });
-    if (username === ADMIN.username && password === ADMIN.password)
-      setLoggedIn(true);
-    else setLoggedIn(false);
+    if (!user) return;
+    await signIn({ username, password }).then((res) =>
+      localStorage.setItem("token", res.token)
+    );
+    setLoggedIn(true);
   };
 
   return (

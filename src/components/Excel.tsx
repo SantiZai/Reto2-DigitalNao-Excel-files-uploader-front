@@ -57,6 +57,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   // submit event
   const handleFileSubmit = async (e: any) => {
     e.preventDefault();
+    if (!localStorage.getItem("token")) return;
     if (excelFile !== null) {
       // read the excel file
       const workbook = XLSX.read(excelFile, { type: "buffer" });
@@ -76,6 +77,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
         defval: "",
       });
 
+      // TODO: dont view all the rows added, fetch the first 10 rows or apply a slice to the data
       // set the data into the state
       setExcelData(data);
 
@@ -86,12 +88,16 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   };
 
   useEffect(() => {
-    getData(actualPage).then((res) => {
-      if (res.batchedData.length > 0) {
-        setExcelData(res.batchedData);
-        setPagesCount(Math.ceil(res.dataLength / 10));
-      }
-    });
+    if (localStorage.getItem("token")) {
+      getData(actualPage)
+        .then((res) => {
+          if (res.batchedData.length > 0) {
+            setExcelData(res.batchedData);
+            setPagesCount(Math.ceil(res.dataLength / 10));
+          }
+        })
+        .catch((err) => console.error(err));
+    }
   }, [actualPage]);
 
   return (
@@ -194,7 +200,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       </div>
 
       {/* render the data */}
-      {isLoggedIn ?? excelData ? (
+      {isLoggedIn && excelData ? (
         <>
           <div className="table-responsive">
             <table className="table table-hover">

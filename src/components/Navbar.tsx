@@ -12,10 +12,8 @@ const Navbar = (props: Props) => {
     password: "",
   } as { username: string; password: string });
 
-  const handleLogin = (credentials: { username: string; password: string }) => {
-    const { username, password } = credentials;
-    props.login(username, password);
-  };
+  const handleLogin = (credentials: { username: string; password: string }) =>
+    props.login(credentials.username, credentials.password);
 
   // onchange login inputs event
   const handleInputs = (e: any) => {
