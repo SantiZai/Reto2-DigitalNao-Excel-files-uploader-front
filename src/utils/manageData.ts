@@ -2,7 +2,7 @@ const PORT = 4200;
 
 export const getData = async (page: number = 1) => {
   try {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (!token) return;
     const response = await fetch(`http://localhost:${PORT}/data?page=${page}`, {
       method: "GET",
@@ -26,7 +26,7 @@ export const postData = async (data: any) => {
     const batch = data.slice(i, i + batchSize);
     try {
       // verify if the token exists
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       if (!token) return;
       const response = await fetch(`http://localhost:${PORT}/data`, {
         method: "POST",
@@ -51,7 +51,7 @@ export const postData = async (data: any) => {
 
 export const deleteData = async () => {
   try {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (!token) return;
     const response = await fetch(`http://localhost:${PORT}/data`, {
       method: "DELETE",

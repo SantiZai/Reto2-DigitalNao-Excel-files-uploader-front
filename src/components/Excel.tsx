@@ -57,7 +57,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   // submit event
   const handleFileSubmit = async (e: any) => {
     e.preventDefault();
-    if (!localStorage.getItem("token")) return;
+    if (!sessionStorage.getItem("token")) return;
     if (excelFile !== null) {
       // read the excel file
       const workbook = XLSX.read(excelFile, { type: "buffer" });
@@ -88,7 +88,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   };
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
+    if (sessionStorage.getItem("token")) {
       getData(actualPage)
         .then((res) => {
           if (res.batchedData.length > 0) {
@@ -98,7 +98,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
         })
         .catch((err) => console.error(err));
     }
-  }, [actualPage]);
+  }, [sessionStorage.getItem("token"), actualPage]);
 
   return (
     <div className="container text-center mt-2">

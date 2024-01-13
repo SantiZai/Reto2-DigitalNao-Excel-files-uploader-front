@@ -13,7 +13,7 @@ function App() {
     setUser({ username, password });
     if (!user) return;
     await signIn({ username, password }).then((res) =>
-      localStorage.setItem("token", res.token)
+      sessionStorage.setItem("token", res.token)
     );
     setLoggedIn(true);
   };
