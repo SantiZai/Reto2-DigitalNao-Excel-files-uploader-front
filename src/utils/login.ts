@@ -1,8 +1,8 @@
-const PORT = import.meta.env.PORT;
+const PORT = 4200;
 
 export const signIn = async (user: { username: string; password: string }) => {
   try {
-    const response = await fetch(`http://localhost:4200/users/login`, {
+    const response = await fetch(`http://localhost:${PORT}/users/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
