@@ -80,6 +80,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       // TODO: dont view all the rows added, fetch the first 10 rows or apply a slice to the data
       // set the data into the state
       setExcelData(data);
+      setActualPage(1);
 
       // delete the previous file and save new file into the db
       deleteData();
@@ -222,7 +223,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
               </thead>
               <tbody>
                 {/* generate the entries for the table */}
-                {excelData.map((row: any, index: number) => (
+                {excelData.slice(0, 10).map((row: any, index: number) => (
                   <tr key={index}>
                     <td>{index + 1}</td>
                     {Object.keys(row).map((key) => (
