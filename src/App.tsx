@@ -2,6 +2,7 @@ import { useState } from "react";
 import Excel from "./components/Excel";
 import Navbar from "./components/Navbar";
 import { signIn } from "./utils/login";
+import { Toaster } from "sonner";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
@@ -24,6 +25,8 @@ function App() {
         login={login}
         loggedIn={loggedIn}
       />
+      {/* toaster for errors in the update of rows */}
+      <Toaster richColors />
       <Excel isLoggedIn={loggedIn} />
     </div>
   );
