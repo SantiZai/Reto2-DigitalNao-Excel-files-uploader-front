@@ -230,6 +230,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
                       <td key={key}>
                         <input
                           name={key}
+                          type={key === "wOStartDate" ? "date" : "text"}
                           value={
                             typeof row[key] === "string"
                               ? row[key].trim()
