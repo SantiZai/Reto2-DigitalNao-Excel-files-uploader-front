@@ -7,11 +7,27 @@ const Pagination = ({
   actualPage: number;
   setActualPage: (page: number) => void;
 }) => {
+  const actualPageStyles = {
+    padding: "5px 10px",
+    margin: "0 3px",
+    backgroundColor: "blue",
+    color: "white",
+    cursor: "pointer",
+  };
+
+  const noActualPageStyles = {
+    padding: "5px 10px",
+    margin: "0 3px",
+    border: "1px solid blue",
+    color: "blue",
+    cursor: "pointer",
+  };
   const handlePage = (page: number) => setActualPage(page);
   return (
     <div>
       {actualPage === 1 ? null : actualPage === 2 ? (
         <span
+          style={noActualPageStyles}
           onClick={(e: React.MouseEvent<HTMLSpanElement>) =>
             handlePage(Number(e.currentTarget.innerHTML))
           }
@@ -21,6 +37,7 @@ const Pagination = ({
       ) : (
         <>
           <span
+            style={noActualPageStyles}
             onClick={(e: React.MouseEvent<HTMLSpanElement>) =>
               handlePage(Number(e.currentTarget.innerHTML))
             }
@@ -28,6 +45,7 @@ const Pagination = ({
             {actualPage - 2}
           </span>
           <span
+            style={noActualPageStyles}
             onClick={(e: React.MouseEvent<HTMLSpanElement>) =>
               handlePage(Number(e.currentTarget.innerHTML))
             }
@@ -36,9 +54,10 @@ const Pagination = ({
           </span>
         </>
       )}
-      <span>{actualPage}</span>
+      <span style={actualPageStyles}>{actualPage}</span>
       {actualPage === pagesCount ? null : actualPage === pagesCount - 1 ? (
         <span
+          style={noActualPageStyles}
           onClick={(e: React.MouseEvent<HTMLSpanElement>) =>
             handlePage(Number(e.currentTarget.innerHTML))
           }
@@ -48,6 +67,7 @@ const Pagination = ({
       ) : (
         <>
           <span
+            style={noActualPageStyles}
             onClick={(e: React.MouseEvent<HTMLSpanElement>) =>
               handlePage(Number(e.currentTarget.innerHTML))
             }
@@ -55,6 +75,7 @@ const Pagination = ({
             {actualPage + 1}
           </span>
           <span
+            style={noActualPageStyles}
             onClick={(e: React.MouseEvent<HTMLSpanElement>) =>
               handlePage(Number(e.currentTarget.innerHTML))
             }
