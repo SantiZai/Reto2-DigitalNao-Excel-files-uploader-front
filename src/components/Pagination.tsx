@@ -13,6 +13,7 @@ const Pagination = ({
     backgroundColor: "blue",
     color: "white",
     cursor: "pointer",
+    borderRadius: "5px",
   };
 
   const noActualPageStyles = {
@@ -21,6 +22,7 @@ const Pagination = ({
     border: "1px solid blue",
     color: "blue",
     cursor: "pointer",
+    borderRadius: "5px",
   };
   const handlePage = (page: number) => setActualPage(page);
   return (

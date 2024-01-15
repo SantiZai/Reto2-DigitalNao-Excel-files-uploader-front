@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
-import { deleteData, getData, postData } from "../utils/manageData";
+import {
+  deleteData,
+  getAllData,
+  getData,
+  postData,
+  updateData,
+} from "../utils/manageData";
 import Pagination from "./Pagination";
 import { toast } from "sonner";
 
@@ -43,38 +49,8 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
     }
   };
 
-  // onchange input event
-  const handleChange = (e: any, index: number, key: string) => {
-    const { name, value } = e.target;
-    if (key === "wOStartDate") {
-      // transform the date to local zone
-      const date = new Date(e.target.value);
-      date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
-      if (date.getDay() === 6 || date.getDay() === 0) {
-        toast.error("No se pueden seleccionar sábados o domingos");
-        return;
-      }
-    }
-    const updatedData = excelData.map((entry: any, i: number) => {
-      if (index === i) {
-        return { ...entry, [name]: value };
-      }
-      return entry;
-    });
-    setExcelData(updatedData);
-  };
-
-  const handleUpdate = async () => {
-    if (editable) {
-      console.log(excelData)
-      /* await deleteData();
-      await postData(excelData); */
-    }
-    setEditable(!editable);
-  };
-
   // submit event
-  const handleFileSubmit = async (e: any) => {
+  const handleFileSubmit = (e: any) => {
     e.preventDefault();
     if (!sessionStorage.getItem("token")) return;
     if (excelFile !== null) {
@@ -107,6 +83,34 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
     }
   };
 
+  // onchange input event
+  const handleChange = async (
+    e: any,
+    index: number,
+    key: string,
+    id: string,
+    row: any
+  ) => {
+    const { name, value } = e.target;
+    if (key === "wOStartDate") {
+      // transform the date to local zone
+      const date = new Date(e.target.value);
+      date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+      if (date.getDay() === 6 || date.getDay() === 0) {
+        toast.error("No se pueden seleccionar sábados o domingos");
+        return;
+      }
+    }
+    const updatedData = excelData.map((entry: any, i: number) => {
+      if (index === i) {
+        return { ...entry, [name]: value };
+      }
+      return entry;
+    });
+    setExcelData(updatedData);
+    await updateData(id, row);
+  };
+
   useEffect(() => {
     if (sessionStorage.getItem("token")) {
       getData(actualPage)
@@ -134,7 +138,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
           </button>
           <button
             className="btn btn-outline-secondary mx-2"
-            onClick={handleUpdate}
+            onClick={() => setEditable(!editable)}
           >
             {editable ? "Guardar" : "Editar"}
           </button>
@@ -248,6 +252,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
                     {Object.keys(row).map((key) => (
                       <td key={key}>
                         <input
+                          onClick={() => console.log(row._id)}
                           name={key}
                           type={key === "wOStartDate" ? "date" : "text"}
                           value={
@@ -255,7 +260,9 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
                               ? row[key].trim()
                               : row[key]
                           }
-                          onChange={(e) => handleChange(e, index, key)}
+                          onChange={(e) =>
+                            handleChange(e, index, key, row._id, row)
+                          }
                           style={
                             editable
                               ? { border: "1px solid black" }
