@@ -1,12 +1,6 @@
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
-import {
-  deleteData,
-  getAllData,
-  getData,
-  postData,
-  updateData,
-} from "../utils/manageData";
+import { getData, postData, updateData, deleteData } from "../utils/manageData";
 import Pagination from "./Pagination";
 import { toast } from "sonner";
 
@@ -88,8 +82,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
     e: any,
     index: number,
     key: string,
-    id: string,
-    row: any
+    id: string
   ) => {
     const { name, value } = e.target;
     if (key === "wOStartDate") {
@@ -108,7 +101,8 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       return entry;
     });
     setExcelData(updatedData);
-    await updateData(id, row);
+    const updatedRow = updatedData[index];
+    await updateData(id, updatedRow);
   };
 
   useEffect(() => {
@@ -260,9 +254,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
                               ? row[key].trim()
                               : row[key]
                           }
-                          onChange={(e) =>
-                            handleChange(e, index, key, row._id, row)
-                          }
+                          onChange={(e) => handleChange(e, index, key, row._id)}
                           style={
                             editable
                               ? { border: "1px solid black" }
