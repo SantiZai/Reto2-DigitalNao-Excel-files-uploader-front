@@ -18,6 +18,15 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [actualPage, setActualPage] = useState<number>(1);
   const [pagesCount, setPagesCount] = useState<number>(1);
 
+  const transformDate = (str: string): string => {
+    let arr: string | string[] = str.split("-");
+    let year = `20${arr[2]}`;
+    arr = arr.slice(0, 2);
+    arr.splice(0, 0, year);
+    arr = arr.join("-");
+    return arr;
+  };
+
   // onchange file event
   const handleFile = (e: any) => {
     const fileTypes = [
@@ -66,14 +75,19 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
         defval: "",
       });
 
+      const dateMap = data.map((entry: any) => {
+        entry["WO Start Date"] = transformDate(entry["WO Start Date"]);
+        return entry;
+      });
+
       // TODO: dont view all the rows added, fetch the first 10 rows or apply a slice to the data
       // set the data into the state
-      setExcelData(data);
+      setExcelData(dateMap);
       setActualPage(1);
 
       // delete the previous file and save new file into the db
       deleteData();
-      postData(data);
+      postData(dateMap);
     }
   };
 
@@ -248,7 +262,11 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
                         <input
                           onClick={() => console.log(row._id)}
                           name={key}
-                          type={key === "wOStartDate" ? "date" : "text"}
+                          type={
+                            key === "wOStartDate" || key === "WO Start Date"
+                              ? "date"
+                              : "text"
+                          }
                           value={
                             typeof row[key] === "string"
                               ? row[key].trim()
