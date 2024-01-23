@@ -5,7 +5,7 @@ import Pagination from "./Pagination";
 import { toast } from "sonner";
 
 const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
-  const [editable, setEditable] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   // onchange states
   const [excelFile, setExcelFile] = useState(null);
@@ -80,24 +80,22 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
         return entry;
       });
 
-      // TODO: dont view all the rows added, fetch the first 10 rows or apply a slice to the data
-      // set the data into the state
-      setExcelData(dateMap);
-      setActualPage(1);
-
       // delete the previous file and save new file into the db
       deleteData();
-      postData(dateMap);
+      postData(dateMap).finally(() => {
+        setActualPage(1);
+        getData(actualPage)
+          .then((res) => {
+            setLoading(true);
+            setExcelData(res.batchedData);
+          })
+          .finally(() => setLoading(false));
+      });
     }
   };
 
   // onchange input event
-  const handleChange = async (
-    e: any,
-    index: number,
-    key: string,
-    id: string
-  ) => {
+  const handleChange = async (e: any, index: number, key: string) => {
     const { name, value } = e.target;
     if (key === "wOStartDate") {
       // transform the date to local zone
@@ -230,6 +228,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       </div>
 
       {/* render the data */}
+      {/* TODO: hacer algo con el loading */}
       {isLoggedIn && excelData ? (
         <>
           <div className="table-responsive">
@@ -271,33 +270,29 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
                                 ? row[key].trim()
                                 : row[key]
                             }
-                            onChange={(e) =>
-                              handleChange(e, index, key, row._id)
-                            }
-                            style={
+                            onChange={(e) => handleChange(e, index, key)}
+                            /* style={
                               editable
                                 ? { border: "1px solid black" }
                                 : { border: "none", outline: "none" }
-                            }
+                            } */
                             readOnly={true}
                           />
                           {key !== "_id" && (
-                            <span
+                            <button
                               className="mx-2"
-                              onClick={(e) => {
-                                e.target.offsetParent.childNodes[0].childNodes[0].readOnly =
-                                  !e.target.offsetParent.childNodes[0]
-                                    .childNodes[0].readOnly;
+                              onClick={(e: any) => {
+                                e.target.parentNode.childNodes[0].readOnly =
+                                  !e.target.parentNode.childNodes[0].readOnly
                                 if (
-                                  e.target.offsetParent.childNodes[0]
-                                    .childNodes[0].readOnly === true
+                                  e.target.parentNode.childNodes[0].readOnly === true
                                 ) {
                                   updateData(row._id, row);
                                 }
                               }}
                             >
                               edit
-                            </span>
+                            </button>
                           )}
                         </div>
                       </td>
