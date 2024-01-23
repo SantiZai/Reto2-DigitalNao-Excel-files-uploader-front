@@ -115,8 +115,6 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       return entry;
     });
     setExcelData(updatedData);
-    const updatedRow = updatedData[index];
-    await updateData(id, updatedRow);
   };
 
   useEffect(() => {
@@ -144,12 +142,12 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
           >
             Cargar información
           </button>
-          <button
+          {/* <button
             className="btn btn-outline-secondary mx-2"
             onClick={() => setEditable(!editable)}
           >
             {editable ? "Guardar" : "Editar"}
-          </button>
+          </button> */}
         </div>
       ) : (
         <h2>Se necesita iniciar sesión</h2>
@@ -259,27 +257,49 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
                     <td>{index + 1}</td>
                     {Object.keys(row).map((key) => (
                       <td key={key}>
-                        <input
-                          onClick={() => console.log(row._id)}
-                          name={key}
-                          type={
-                            key === "wOStartDate" || key === "WO Start Date"
-                              ? "date"
-                              : "text"
-                          }
-                          value={
-                            typeof row[key] === "string"
-                              ? row[key].trim()
-                              : row[key]
-                          }
-                          onChange={(e) => handleChange(e, index, key, row._id)}
-                          style={
-                            editable
-                              ? { border: "1px solid black" }
-                              : { border: "none", outline: "none" }
-                          }
-                          readOnly={!editable}
-                        />
+                        <div className="d-flex">
+                          <input
+                            onClick={() => console.log(row._id)}
+                            name={key}
+                            type={
+                              key === "wOStartDate" || key === "WO Start Date"
+                                ? "date"
+                                : "text"
+                            }
+                            value={
+                              typeof row[key] === "string"
+                                ? row[key].trim()
+                                : row[key]
+                            }
+                            onChange={(e) =>
+                              handleChange(e, index, key, row._id)
+                            }
+                            style={
+                              editable
+                                ? { border: "1px solid black" }
+                                : { border: "none", outline: "none" }
+                            }
+                            readOnly={true}
+                          />
+                          {key !== "_id" && (
+                            <span
+                              className="mx-2"
+                              onClick={(e) => {
+                                e.target.offsetParent.childNodes[0].childNodes[0].readOnly =
+                                  !e.target.offsetParent.childNodes[0]
+                                    .childNodes[0].readOnly;
+                                if (
+                                  e.target.offsetParent.childNodes[0]
+                                    .childNodes[0].readOnly === true
+                                ) {
+                                  updateData(row._id, row);
+                                }
+                              }}
+                            >
+                              edit
+                            </span>
+                          )}
+                        </div>
                       </td>
                     ))}
                   </tr>
