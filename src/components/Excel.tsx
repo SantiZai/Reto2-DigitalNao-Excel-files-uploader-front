@@ -254,44 +254,44 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
                 {excelData.slice(0, 10).map((row: any, index: number) => (
                   <tr key={index}>
                     <td>{index + 1}</td>
-                    {Object.keys(row).map((key) => (
+                    {Object.keys(row).map((key, i) => (
                       <td key={key}>
                         <div className="d-flex">
                           <input
-                            onClick={() => console.log(row._id)}
                             name={key}
                             type={
                               key === "wOStartDate" || key === "WO Start Date"
                                 ? "date"
                                 : "text"
                             }
+                            style={{ border: "none", outline: "none" }}
                             value={
                               typeof row[key] === "string"
                                 ? row[key].trim()
                                 : row[key]
                             }
                             onChange={(e) => handleChange(e, index, key)}
-                            /* style={
-                              editable
-                                ? { border: "1px solid black" }
-                                : { border: "none", outline: "none" }
-                            } */
                             readOnly={true}
                           />
                           {key !== "_id" && (
                             <button
                               className="mx-2"
                               onClick={(e: any) => {
-                                e.target.parentNode.childNodes[0].readOnly =
-                                  !e.target.parentNode.childNodes[0].readOnly
-                                if (
-                                  e.target.parentNode.childNodes[0].readOnly === true
-                                ) {
+                                let input = e.target.previousElementSibling;
+                                input.readOnly = !input.readOnly;
+
+                                if (input.readOnly) {
+                                  (input.style.border = "none"),
+                                    (input.style.outline = "none");
+                                    e.target.innerText = "Editar"
                                   updateData(row._id, row);
+                                } else {
+                                  input.style.border = "1px solid black";
+                                  e.target.innerText = "Guardar"
                                 }
                               }}
                             >
-                              edit
+                              Editar
                             </button>
                           )}
                         </div>
