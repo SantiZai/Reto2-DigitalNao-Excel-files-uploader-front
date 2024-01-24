@@ -254,7 +254,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
                 {excelData.slice(0, 10).map((row: any, index: number) => (
                   <tr key={index}>
                     <td>{index + 1}</td>
-                    {Object.keys(row).map((key, i) => (
+                    {Object.keys(row).map((key) => (
                       <td key={key}>
                         <div className="d-flex">
                           <input
@@ -279,15 +279,14 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
                               onClick={(e: any) => {
                                 let input = e.target.previousElementSibling;
                                 input.readOnly = !input.readOnly;
-
                                 if (input.readOnly) {
                                   (input.style.border = "none"),
                                     (input.style.outline = "none");
-                                    e.target.innerText = "Editar"
+                                  e.target.innerText = "Editar";
                                   updateData(row._id, row);
                                 } else {
                                   input.style.border = "1px solid black";
-                                  e.target.innerText = "Guardar"
+                                  e.target.innerText = "Guardar";
                                 }
                               }}
                             >
