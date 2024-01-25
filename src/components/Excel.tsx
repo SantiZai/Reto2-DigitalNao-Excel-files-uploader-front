@@ -77,6 +77,9 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
 
       const dateMap = data.map((entry: any) => {
         entry["WO Start Date"] = transformDate(entry["WO Start Date"]);
+        entry["Request Date F553312.DRQJ"] = transformDate(
+          entry["Request Date F553312.DRQJ"]
+        );
         return entry;
       });
 
@@ -97,7 +100,12 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   // onchange input event
   const handleChange = async (e: any, index: number, key: string) => {
     const { name, value } = e.target;
-    if (key === "wOStartDate") {
+    if (
+      key === "WO Start Date" ||
+      key === "wOStartDate" ||
+      key === "Request Date F553312.DRQJ" ||
+      key === "requestDate"
+    ) {
       // transform the date to local zone
       const date = new Date(e.target.value);
       date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
@@ -131,22 +139,14 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   return (
     <div className="container text-center mt-2">
       {isLoggedIn ? (
-        <div className="mb-2">
-          <button
-            className="btn btn-outline-primary mx-2"
-            type="button"
-            data-bs-toggle="modal"
-            data-bs-target="#loadInfoModalContainer"
-          >
-            Cargar información
-          </button>
-          {/* <button
-            className="btn btn-outline-secondary mx-2"
-            onClick={() => setEditable(!editable)}
-          >
-            {editable ? "Guardar" : "Editar"}
-          </button> */}
-        </div>
+        <button
+          className="btn btn-outline-primary mx-2 mb-2"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#loadInfoModalContainer"
+        >
+          Cargar información
+        </button>
       ) : (
         <h2>Se necesita iniciar sesión</h2>
       )}
@@ -255,13 +255,22 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
                   <tr key={index}>
                     <td>{index + 1}</td>
                     {Object.keys(row).map((key) => (
-                      <td key={key}>
+                      <td
+                        key={key}
+                        className="p-2 bg-secondary"
+                      >
                         <div className="d-flex">
                           <input
                             name={key}
                             type={
-                              key === "wOStartDate" || key === "WO Start Date"
+                              key === "wOStartDate" ||
+                              key === "WO Start Date" ||
+                              key === "requestDate" ||
+                              key === "Request Date F553312.DRQJ"
                                 ? "date"
+                                : key === "quantityOrderer" ||
+                                  key === "Quantity Ordered "
+                                ? "number"
                                 : "text"
                             }
                             style={{ border: "none", outline: "none" }}
@@ -272,10 +281,14 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
                             }
                             onChange={(e) => handleChange(e, index, key)}
                             readOnly={true}
+                            onClick={() => console.log(key)}
                           />
-                          {key !== "_id" && (
+                          {key === "wOStatus" && Number(row[key]) < 11 && (
+                            <span>si</span>
+                          )}
+                          {/* key !== "_id" &&  (
                             <button
-                              className="mx-2"
+                              className="mx-2 px-4 py-1 btn btn-primary"
                               onClick={(e: any) => {
                                 let input = e.target.previousElementSibling;
                                 input.readOnly = !input.readOnly;
@@ -292,7 +305,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
                             >
                               Editar
                             </button>
-                          )}
+                          ) */}
                         </div>
                       </td>
                     ))}
