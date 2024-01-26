@@ -257,7 +257,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
                     {Object.keys(row).map((key) => (
                       <td
                         key={key}
-                        className="p-2 bg-secondary"
+                        className="p-2"
                       >
                         <div className="d-flex">
                           <input
@@ -281,7 +281,6 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
                             }
                             onChange={(e) => handleChange(e, index, key)}
                             readOnly={true}
-                            onClick={() => console.log(key)}
                           />
                           {((key === "quantityOrderer" ||
                             key === "requestDate") &&
@@ -290,7 +289,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
                             key !== "requestDate" &&
                             key !== "_id") ? (
                             <button
-                              className="mx-2 px-4 py-1 btn btn-primary"
+                              className="btn btn-primary mx-2 px-4 py-1"
                               onClick={(e: any) => {
                                 let input = e.target.previousElementSibling;
                                 input.readOnly = !input.readOnly;
@@ -308,28 +307,8 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
                               Editar
                             </button>
                           ) : (
-                            <></>
+                            <button className="btn btn-secondary btn-disabled mx-2 px-4 py-1">Editar</button>
                           )}
-                          {/* key !== "_id" &&  (
-                            <button
-                              className="mx-2 px-4 py-1 btn btn-primary"
-                              onClick={(e: any) => {
-                                let input = e.target.previousElementSibling;
-                                input.readOnly = !input.readOnly;
-                                if (input.readOnly) {
-                                  (input.style.border = "none"),
-                                    (input.style.outline = "none");
-                                  e.target.innerText = "Editar";
-                                  updateData(row._id, row);
-                                } else {
-                                  input.style.border = "1px solid black";
-                                  e.target.innerText = "Guardar";
-                                }
-                              }}
-                            >
-                              Editar
-                            </button>
-                          ) */}
                         </div>
                       </td>
                     ))}
