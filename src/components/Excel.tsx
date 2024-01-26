@@ -283,8 +283,32 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
                             readOnly={true}
                             onClick={() => console.log(key)}
                           />
-                          {key === "wOStatus" && Number(row[key]) < 11 && (
-                            <span>si</span>
+                          {((key === "quantityOrderer" ||
+                            key === "requestDate") &&
+                            Number(row["wOStatus"]) < 11) ||
+                          (key !== "quantityOrderer" &&
+                            key !== "requestDate" &&
+                            key !== "_id") ? (
+                            <button
+                              className="mx-2 px-4 py-1 btn btn-primary"
+                              onClick={(e: any) => {
+                                let input = e.target.previousElementSibling;
+                                input.readOnly = !input.readOnly;
+                                if (input.readOnly) {
+                                  (input.style.border = "none"),
+                                    (input.style.outline = "none");
+                                  e.target.innerText = "Editar";
+                                  updateData(row._id, row);
+                                } else {
+                                  input.style.border = "1px solid black";
+                                  e.target.innerText = "Guardar";
+                                }
+                              }}
+                            >
+                              Editar
+                            </button>
+                          ) : (
+                            <></>
                           )}
                           {/* key !== "_id" &&  (
                             <button
