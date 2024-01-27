@@ -5,8 +5,6 @@ import Pagination from "./Pagination";
 import { toast } from "sonner";
 
 const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
-  const [loading, setLoading] = useState<boolean>(false);
-
   // onchange states
   const [excelFile, setExcelFile] = useState(null);
   const [typeError, setTypeError] = useState<string | null>(null);
@@ -18,6 +16,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [actualPage, setActualPage] = useState<number>(1);
   const [pagesCount, setPagesCount] = useState<number>(1);
 
+  // transform the dates to a valid format before save in the db
   const transformDate = (str: string): string => {
     let arr: string | string[] = str.split("-");
     let year = `20${arr[2]}`;
@@ -87,12 +86,9 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       deleteData();
       postData(dateMap).finally(() => {
         setActualPage(1);
-        getData(actualPage)
-          .then((res) => {
-            setLoading(true);
-            setExcelData(res.batchedData);
-          })
-          .finally(() => setLoading(false));
+        getData(actualPage).then((res) => {
+          setExcelData(res.batchedData);
+        });
       });
     }
   };
