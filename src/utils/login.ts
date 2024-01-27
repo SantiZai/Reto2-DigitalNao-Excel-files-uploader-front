@@ -1,8 +1,8 @@
-const PORT = 4200;
+const API = import.meta.env.VITE_API_URL
 
 export const signIn = async (user: { username: string; password: string }) => {
   try {
-    const response = await fetch(`http://localhost:${PORT}/users/login`, {
+    const response = await fetch(`${API}/users/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

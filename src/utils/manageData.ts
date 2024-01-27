@@ -1,4 +1,4 @@
-const PORT = 4200;
+const API = import.meta.env.VITE_API_URL
 
 export type DataModel = {
   _id: string;
@@ -29,9 +29,10 @@ export type DataModel = {
 
 export const getData = async (page: number = 1) => {
   try {
+    console.log(API)
     const token = sessionStorage.getItem("token");
     if (!token) return;
-    const response = await fetch(`http://localhost:${PORT}/data?page=${page}`, {
+    const response = await fetch(`${API}/data?page=${page}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +58,7 @@ export const postData = async (data: any) => {
       // verify if the token exists
       const token = sessionStorage.getItem("token");
       if (!token) return;
-      const response = await fetch(`http://localhost:${PORT}/data`, {
+      const response = await fetch(`${API}/data`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -83,7 +84,7 @@ export const updateData = async (id: string, data: DataModel) => {
     console.log(data);
     const token = sessionStorage.getItem("token");
     if (!token) return;
-    const response = await fetch(`http://localhost:${PORT}/data/${id}`, {
+    const response = await fetch(`${API}/data/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -101,7 +102,7 @@ export const deleteData = async () => {
   try {
     const token = sessionStorage.getItem("token");
     if (!token) return;
-    const response = await fetch(`http://localhost:${PORT}/data`, {
+    const response = await fetch(`${API}/data`, {
       method: "DELETE",
       headers: {
         "x-auth-token": token,

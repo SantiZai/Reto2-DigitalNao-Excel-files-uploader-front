@@ -307,7 +307,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
                               Editar
                             </button>
                           ) : (
-                            <button className="btn btn-secondary btn-disabled mx-2 px-4 py-1">Editar</button>
+                            <></>
                           )}
                         </div>
                       </td>
