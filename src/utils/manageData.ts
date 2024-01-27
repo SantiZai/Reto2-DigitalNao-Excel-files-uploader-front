@@ -29,7 +29,6 @@ export type DataModel = {
 
 export const getData = async (page: number = 1) => {
   try {
-    console.log(API)
     const token = sessionStorage.getItem("token");
     if (!token) return;
     const response = await fetch(`${API}/data?page=${page}`, {
