@@ -52,7 +52,7 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   };
 
   // submit event
-  const handleFileSubmit = (e: any) => {
+  const handleFileSubmit = async (e: any) => {
     e.preventDefault();
     if (!sessionStorage.getItem("token")) return;
     if (excelFile !== null) {
@@ -84,12 +84,10 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
 
       // delete the previous file and save new file into the db
       deleteData();
-      postData(dateMap).finally(() => {
+      await postData(dateMap).then(() => {
         setActualPage(1);
-        getData(actualPage).then((res) => {
-          setExcelData(res.batchedData);
-        });
       });
+      await getData(actualPage).then((res) => setExcelData(res.batchedData));
     }
   };
 
