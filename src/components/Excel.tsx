@@ -84,8 +84,10 @@ const Excel = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
 
       // delete the previous file and save new file into the db
       deleteData();
-      await postData(dateMap).then(() => setActualPage(1));
-      await getData(actualPage).then((res) => setExcelData(res.batchedData));
+      await postData(dateMap).then(() => {
+        setActualPage(1);
+        getData(actualPage).then((res) => setExcelData(res.batchedData));
+      });
     }
   };
 

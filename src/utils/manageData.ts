@@ -45,7 +45,11 @@ export const getData = async (page: number = 1) => {
   }
 };
 
-//TODO: fix the types of the data
+/**
+ * Batch the data to reduce the payload in the request
+ * @param data 
+ * @returns 
+ */
 export const postData = async (data: any) => {
   // set a max number of data for each petition to dont charge the payload
   const batchSize = 50;
